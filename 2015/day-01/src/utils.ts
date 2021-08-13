@@ -16,6 +16,9 @@ export const readFile = async (fileName = 'data.txt') => {
   return lines;
 };
 
-export function shout(message: string) {
+export function shout(message: string | number) {
+  if (typeof message === "number") {
+    message = message.toString()
+  }
   console.log(boxen(chalk.blue(message), {padding: 1, margin: 1}))
 }
