@@ -2,62 +2,103 @@ import { readFile, shout } from './utils';
 
 export type Step = '<' | '>' | '^' | 'v';
 
-export const stepsMap: { [key: string]: number } = {
-  '0,0': 1,
-};
+class Santa {
+  housesVisited: { [key: string]: number };
+  currentStep: {
+    x: number;
+    y: number;
+    toHouseKey: () => string;
+  };
 
-export const currentStep = {
-  x: 0,
-  y: 0,
+  constructor() {
+    this.housesVisited = {
+      '0,0': 1,
+    };
+    this.currentStep = {
+      x: 0,
+      y: 0,
+      toHouseKey() {
+        return `${this.x},${this.y}`;
+      },
+    };
+  }
 
-  toStepKey() {
-    return `${this.x},${this.y}`;
-  },
-};
+  processStep(step: Step) {
+    this.move(step);
+    this.deliverPresent();
+  }
 
-export function processSteps(steps: Step[]): number {
+  numHousesVisited(): number {
+    return Object.keys(this.housesVisited).length;
+  }
+
+  houseKeysVisited(): string[] {
+    return Object.keys(this.housesVisited);
+  }
+
+  private move(step: Step) {
+    if (['<', '>'].includes(step)) {
+      this.moveX(step);
+    } else {
+      this.moveY(step);
+    }
+  }
+
+  private moveX(step: Step) {
+    const distance = step === '>' ? 1 : -1;
+    this.currentStep.x += distance;
+  }
+
+  private moveY(step: Step) {
+    const distance = step === '^' ? 1 : -1;
+    this.currentStep.y += distance;
+  }
+
+  private deliverPresent() {
+    const houseKey = this.currentStep.toHouseKey();
+    if (this.housesVisited.hasOwnProperty(houseKey)) {
+      this.housesVisited[houseKey] += 1;
+    } else {
+      this.housesVisited[houseKey] = 1;
+    }
+  }
+}
+
+export function processSteps(steps: Step[]): string[] {
+  const santa = new Santa();
   for (const step of steps) {
-    processStep(step);
+    santa.processStep(step);
   }
 
-  return Object.keys(stepsMap).length;
+  return santa.houseKeysVisited();
 }
 
-function processStep(step: Step) {
-  moveStep(step);
-  deliverPresent();
-}
+export function splitSteps(steps: Step[]) {
+  const realSanta: Step[] = [];
+  const roboSanta: Step[] = [];
 
-function deliverPresent() {
-  const stepKey = currentStep.toStepKey();
-  if (stepsMap.hasOwnProperty(stepKey)) {
-    stepsMap[stepKey] += 1;
-  } else {
-    stepsMap[stepKey] = 1;
+  for (let i = 0; i < steps.length; i++) {
+    if (i % 2 === 0) {
+      realSanta.push(steps[i]);
+    } else {
+      roboSanta.push(steps[i]);
+    }
   }
-}
 
-function moveStep(step: Step) {
-  if (['<', '>'].includes(step)) {
-    moveX(step);
-  } else {
-    moveY(step);
-  }
-}
-
-function moveX(step: Step) {
-  const move = step === '>' ? 1 : -1;
-  currentStep.x += move;
-}
-
-function moveY(step: Step) {
-  const move = step === '^' ? 1 : -1;
-  currentStep.y += move;
+  return { realSanta, roboSanta };
 }
 
 async function main() {
   const [steps] = await readFile();
-  shout(processSteps(steps as unknown as Step[]));
+  const splitStepsObj = splitSteps(steps as unknown as Step[]);
+
+  const realSantaKeys = processSteps(splitStepsObj.realSanta);
+  const roboSantaKeys = processSteps(splitStepsObj.roboSanta);
+  console.log({ realSantaKeys, roboSantaKeys });
+
+  const houseKeysSet = new Set([...realSantaKeys, ...roboSantaKeys]);
+  console.log(houseKeysSet);
+  shout(houseKeysSet.size);
 }
 
 main();

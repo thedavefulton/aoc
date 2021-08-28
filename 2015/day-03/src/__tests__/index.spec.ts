@@ -1,5 +1,9 @@
-import { processSteps, stepsMap, currentStep, Step } from '../index';
+import { splitSteps, Step } from '../index';
 
-test('processSteps returns the correct num of houses', () => {
-  expect(processSteps('>' as unknown as Step[])).toBe(2);
+describe('splitSteps', () => {
+  test('^v', () => {
+    const res = splitSteps('^v' as unknown as Step[]);
+    expect(res.realSanta.join('')).toBe('^');
+    expect(res.roboSanta.join('')).toBe('v');
+  });
 });
