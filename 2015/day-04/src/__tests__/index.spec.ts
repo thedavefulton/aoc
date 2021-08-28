@@ -1,5 +1,11 @@
-import { sum } from '../index';
+import { findLowestNumber } from '../index';
 
-test('sum', () => {
-  expect(sum()).toBe(0);
+describe('findLowestNumber', () => {
+  test('abcdef', () => {
+    expect(findLowestNumber('abcdef')).toBe(609043);
+  });
+
+  test('pqrstuv', () => {
+    expect(findLowestNumber('pqrstuv')).toBe(1048970);
+  });
 });
