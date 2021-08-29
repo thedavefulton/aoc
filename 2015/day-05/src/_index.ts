@@ -59,4 +59,4 @@ async function main() {
   shout(numberOfNice);
 }
 
-main();
+// main();

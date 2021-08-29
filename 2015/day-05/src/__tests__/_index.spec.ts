@@ -1,4 +1,4 @@
-import { stringIsNice } from '../index';
+import { stringIsNice } from '../_index';
 
 describe('checkString', () => {
   test('ugknbfddgicrmopn is nice', () => {
