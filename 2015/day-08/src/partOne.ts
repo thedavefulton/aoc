@@ -1,5 +1,31 @@
 import { shout } from './utils';
 
-export const sum = (...a: number[]) => a.reduce((acc, val) => acc + val, 0);
+export class ListItem {
+  literal: string[];
 
-export const partOneShout = () => shout('Hello from Part One!');
+  constructor(literal: string[]) {
+    this.literal = literal;
+  }
+
+  get literalLength() {
+    return this.literal.length;
+  }
+
+  get inMemoryLength() {
+    const trimmedLiteral = this.literal.slice(1, -1);
+    if (trimmedLiteral.length < 2) return trimmedLiteral.length;
+
+    let length = 0;
+    for (let i = 0; i < trimmedLiteral.length; i++) {
+      if (trimmedLiteral[i].includes('\\')) {
+        i = trimmedLiteral[i + 1] === 'x' ? (i += 3) : (i += 1);
+      }
+      length += 1;
+    }
+    return length;
+  }
+
+  get lengthDiff() {
+    return this.literalLength - this.inMemoryLength;
+  }
+}
