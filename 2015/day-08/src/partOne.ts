@@ -28,4 +28,16 @@ export class ListItem {
   get lengthDiff() {
     return this.literalLength - this.inMemoryLength;
   }
+
+  get encodedLength() {
+    const trimmedLiteral = this.literal;
+    let totalLength = 2;
+    for (let i = 0; i < trimmedLiteral.length; i++) {
+      if (['"', '\\'].includes(trimmedLiteral[i])) {
+        totalLength += 1;
+      }
+      totalLength += 1;
+    }
+    return totalLength;
+  }
 }

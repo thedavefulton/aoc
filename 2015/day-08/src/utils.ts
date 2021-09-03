@@ -16,6 +16,25 @@ export const readFile = async (fileName = 'data.txt') => {
   return lines;
 };
 
+export const readFileByChar = (fileName = 'data.txt'): string[][] => {
+  let data = fs.readFileSync(fileName, 'utf-8');
+  const lines: string[][] = [];
+  let line: string[] = [];
+
+  for (const ch of data) {
+    if (/\s/.test(ch)) {
+      if (line.length) {
+        lines.push(line);
+      }
+      line = [];
+    } else {
+      line.push(ch);
+    }
+  }
+
+  return lines;
+};
+
 export function shout(message: string | number) {
   if (typeof message === 'number') {
     message = message.toString();

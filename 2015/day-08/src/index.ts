@@ -4,7 +4,6 @@ import { ListItem } from './partOne';
 
 function partOne() {
   const lines = readFileByChar();
-  console.log(lines.length);
   const totalDiff = lines.reduce((acc, cur) => {
     const listItem = new ListItem(cur);
     acc += listItem.lengthDiff;
@@ -15,10 +14,21 @@ function partOne() {
   shout(totalDiff);
 }
 
-function main() {
-  // partTwoShout();
+function partTwo() {
+  const lines = readFileByChar();
+  const totalDiff = lines.reduce((acc, cur) => {
+    const listItem = new ListItem(cur);
+    acc += listItem.encodedLength - listItem.literalLength;
 
-  partOne();
+    return acc;
+  }, 0);
+
+  shout(totalDiff);
+}
+
+function main() {
+  // partOne();
+  partTwo();
 }
 
 main();
